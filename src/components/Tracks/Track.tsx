@@ -1,14 +1,12 @@
 import {
   Badge,
   Box,
-  Breadcrumbs,
   Button,
   Card,
   Group,
   Image,
   Stack,
   Text,
-  Textarea,
   Title,
 } from '@mantine/core';
 import { useIntersection } from '@mantine/hooks';

@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconPlayerStopFilled } from '@tabler/icons-react';
-import { IconPhoto, IconPlayerStop } from '@tabler/icons-react';
+import { IconPhoto } from '@tabler/icons-react';
 import { useCurrentTrack } from 'lib/state';
 
 type CurrentTrackProps = { sx?: Sx };
