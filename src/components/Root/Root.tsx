@@ -7,26 +7,29 @@ import FatalError from './FatalError';
 import Loading from './Loading';
 import LocalStorageStore from './LocalStorageStore';
 import YjsStore from './YjsStore';
-import { RecoilURLSyncJSON } from 'recoil-sync';
+import UrlStore from './UrlStore';
 
 const Root = () => {
   return (
+    // provides default theme to provide proper styles if FatalError is rendered
     <RootThemeProvider>
       <ErrorBoundary FallbackComponent={FatalError}>
         <RecoilRoot>
+          {/* handles pending recoil states */}
           <Suspense fallback={<Loading />}>
-            <RecoilURLSyncJSON
-              location={{ part: 'queryParams' }}
-              storeKey='hash'
-            >
+            {/* syncs state with URL */}
+            <UrlStore storeKey='hash'>
+              {/* syncs state with LocalStorage */}
               <LocalStorageStore storeKey='userSettings'>
+                {/* syncs state p2p */}
                 <YjsStore storeKey='shared'>
+                  {/* this ThemeProvider includes user settings, like dark mode */}
                   <UserThemeProvider>
                     <App />
                   </UserThemeProvider>
                 </YjsStore>
               </LocalStorageStore>
-            </RecoilURLSyncJSON>
+            </UrlStore>
           </Suspense>
         </RecoilRoot>
       </ErrorBoundary>
