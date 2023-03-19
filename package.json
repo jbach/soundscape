@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@alexjamesmalcolm/human-readable-ids": "^1.0.12",
     "@discordapp/perceptual": "^1.1.0",
     "@effect/schema": "^0.2.0",
     "@emotion/react": "^11.10.6",
@@ -20,6 +19,7 @@
     "@recoiljs/refine": "^0.1.1",
     "@tabler/icons-react": "^2.10.0",
     "howler": "^2.2.3",
+    "human-id": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",

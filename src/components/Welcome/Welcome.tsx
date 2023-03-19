@@ -1,6 +1,6 @@
-import { humanReadableId } from '@alexjamesmalcolm/human-readable-ids';
 import { Button, Center } from '@mantine/core';
 import { IconMusic } from '@tabler/icons-react';
+import humanId from 'human-id';
 import { hasInteractedState, roomIdState } from 'lib/state';
 import { useRecoilTransaction_UNSTABLE } from 'recoil';
 
@@ -8,7 +8,7 @@ const Welcome = () => {
   // on create: set hash + setHasInteracted
   const createSession = useRecoilTransaction_UNSTABLE(({ set }) => () => {
     set(hasInteractedState, true);
-    set(roomIdState, humanReadableId());
+    set(roomIdState, humanId());
   });
 
   return (
