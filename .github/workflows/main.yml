@@ -1,4 +1,4 @@
-Name: Build & deploy
+name: Build & deploy
 
 on:
   # runs on versioned pushes
