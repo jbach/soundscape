@@ -1,0 +1,68 @@
+{
+  "name": "soundscape",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@alexjamesmalcolm/human-readable-ids": "^1.0.12",
+    "@discordapp/perceptual": "^1.1.0",
+    "@effect/schema": "^0.2.0",
+    "@emotion/react": "^11.10.6",
+    "@fontsource/ia-writer-mono": "^4.5.3",
+    "@fontsource/inter": "^4.5.15",
+    "@mantine/core": "^6.0.2",
+    "@mantine/hooks": "^6.0.2",
+    "@recoiljs/refine": "^0.1.1",
+    "@tabler/icons-react": "^2.10.0",
+    "howler": "^2.2.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^3.1.4",
+    "recoil": "^0.7.7",
+    "recoil-sync": "^0.2.0",
+    "y-webrtc": "^10.2.5",
+    "yjs": "^13.5.50",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/howler": "^2.2.7",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^3.1.0",
+    "eslint": "^8.36.0",
+    "eslint-config-react-app": "^7.0.1",
+    "prettier": "^2.8.4",
+    "typescript": "^5.0.2",
+    "vite": "^4.2.0",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-tsconfig-paths": "^4.0.7"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "react-app"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": [
+        "warn",
+        {
+          "additionalHooks": "(useRecoilCallback|useRecoilTransaction_UNSTABLE)"
+        }
+      ]
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "jsxSingleQuote": true
+  },
+  "volta": {
+    "node": "18.15.0",
+    "npm": "9.5.0"
+  }
+}
