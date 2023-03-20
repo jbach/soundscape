@@ -5,13 +5,13 @@ import {
   Box,
   Center,
   Flex,
+  Group,
   HoverCard,
   Image,
   Sx,
   Text,
   Title,
   Tooltip,
-  rem,
 } from '@mantine/core';
 import { IconMusic, IconPlayerStopFilled } from '@tabler/icons-react';
 import { useCurrentTrack } from 'lib/state';
@@ -30,16 +30,12 @@ const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
           borderRadius: theme.radius.md,
           backgroundColor:
             theme.colorScheme === 'dark'
-              ? theme.colors.dark[6]
-              : theme.colors.gray[0],
-          border: `${rem(1)} solid ${
-            theme.colorScheme === 'dark'
               ? theme.colors.dark[4]
-              : theme.colors.gray[4]
-          }`,
+              : theme.colors.gray[0],
           ...sx,
         })}
-        p='xs'
+        px='md'
+        py={8}
       >
         <Text c='dimmed' fz='sm' fw={500}>
           Nothing playing
@@ -49,31 +45,26 @@ const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
   }
 
   return (
-    <Box sx={sx}>
+    <Group spacing='xs' sx={sx} noWrap>
       <BackgroundImage
         src={currentTrack.large_image}
         radius='md'
         sx={(theme) => ({
-          border: `${rem(1)} solid ${
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[4]
-              : theme.colors.gray[4]
-          }`,
           overflow: 'hidden',
         })}
       >
         <Center
-          pr='xs'
+          pr='md'
           sx={(theme) => ({
             backgroundColor: theme.fn.rgba(
               theme.colorScheme === 'dark'
-                ? theme.colors.dark[6]
+                ? theme.colors.dark[4]
                 : theme.colors.gray[0],
-              0.75
+              theme.colorScheme === 'dark' ? 0.75 : 0.85
             ),
           })}
         >
-          <Flex align='center'>
+          <Group spacing='md' noWrap>
             <HoverCard width={320} shadow='md' withArrow>
               <HoverCard.Target>
                 <Avatar
@@ -83,6 +74,7 @@ const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
                   sx={{
                     cursor: 'help',
                   }}
+                  color='default'
                 >
                   <IconMusic {...getIconProps('md')} />
                 </Avatar>
@@ -103,23 +95,23 @@ const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
                 />
               </HoverCard.Dropdown>
             </HoverCard>
-            <Text fz='sm' ml='xs' mr='xs' fw={500}>
+            <Text fz='sm' fw={500}>
               {currentTrack.track_title}
             </Text>
-            <Tooltip label='Stop playback for all listeners'>
-              <ActionIcon
-                color='red'
-                onClick={() => {
-                  setCurrentTrack(undefined);
-                }}
-              >
-                <IconPlayerStopFilled size='1.125rem' />
-              </ActionIcon>
-            </Tooltip>
-          </Flex>
+          </Group>
         </Center>
       </BackgroundImage>
-    </Box>
+      <Tooltip label='Stop playback for all listeners'>
+        <ActionIcon
+          color='red'
+          onClick={() => {
+            setCurrentTrack(undefined);
+          }}
+        >
+          <IconPlayerStopFilled {...getIconProps('md')} />
+        </ActionIcon>
+      </Tooltip>
+    </Group>
   );
 };
 
