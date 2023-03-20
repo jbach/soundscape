@@ -8,4 +8,7 @@ export default defineConfig({
   base: `${process.env.BASE_PATH ?? ''}/`,
   server: { open: true },
   plugins: [react(), tsconfigPaths(), eslint()],
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+  },
 });
