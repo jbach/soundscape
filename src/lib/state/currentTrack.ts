@@ -1,19 +1,68 @@
-import { atom, selector, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  AtomEffect,
+  atom,
+  selector,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil';
 import * as S from '@effect/schema/Schema';
 import { getSyncEffect } from './helpers/sync';
 import player from 'lib/player';
 import { getTrack } from 'lib/tracks';
 import { trackIdSchema } from 'lib/schemas';
+import defaultFavicon from 'img/favicon.svg';
+import playingFavicon from 'img/playing.svg';
 
 const currentTrackIdSchema = S.union(trackIdSchema, S.undefined);
 type CurrentTrackId = S.To<typeof currentTrackIdSchema>;
+
+/**
+ * syncs playstate with favicon
+ */
+const syncFaviconEffect: AtomEffect<CurrentTrackId> = ({
+  onSet,
+  node,
+  getPromise,
+  trigger,
+}) => {
+  if (trigger === 'get') {
+    // delete existing favicons
+    const existingElements =
+      document.querySelectorAll<HTMLLinkElement>('link[rel*="icon"]');
+    existingElements.forEach((element) => document.head.removeChild(element));
+
+    // create favicon
+    const element = document.createElement('link');
+    element.rel = 'shortcut icon';
+    document.querySelector('head')?.appendChild(element);
+    element.setAttribute('type', 'image/svg+xml');
+    element.setAttribute('href', defaultFavicon);
+
+    getPromise(node).then((initialTrack) => {
+      if (initialTrack) {
+        element.setAttribute('href', playingFavicon);
+      }
+    });
+
+    onSet((nextTrack, prevTrack, isReset) => {
+      if (isReset || !nextTrack) {
+        // stop
+        element.setAttribute('href', defaultFavicon);
+      } else if (nextTrack !== prevTrack) {
+        // play
+        element.setAttribute('href', playingFavicon);
+      }
+    });
+  }
+};
 
 const currentTrackIdState = atom<CurrentTrackId>({
   key: 'currentTrackId',
   default: undefined,
   effects: [
     getSyncEffect('shared', currentTrackIdSchema),
-    ({ onSet, node, getPromise, trigger, getLoadable }) => {
+    // sync with player
+    ({ onSet, node, getPromise, trigger }) => {
       if (trigger === 'get') {
         getPromise(node).then((initialTrack) => {
           if (initialTrack) {
@@ -33,6 +82,7 @@ const currentTrackIdState = atom<CurrentTrackId>({
         }
       });
     },
+    syncFaviconEffect,
   ],
 });
 
