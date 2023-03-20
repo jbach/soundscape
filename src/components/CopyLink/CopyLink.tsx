@@ -13,6 +13,7 @@ const CopyLink = ({ sx = {} }: CopyLinkProps) => {
             onClick={copy}
             color={copied ? 'green' : 'default'}
             sx={sx}
+            aria-label={copied ? 'URL was copied' : 'Copy URL'}
           >
             {copied ? (
               <IconClipboardCheck {...getIconProps('md')} />

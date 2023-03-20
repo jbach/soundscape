@@ -4,7 +4,6 @@ import {
   BackgroundImage,
   Box,
   Center,
-  Flex,
   Group,
   HoverCard,
   Image,
@@ -107,6 +106,7 @@ const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
           onClick={() => {
             setCurrentTrack(undefined);
           }}
+          aria-label='Stop playback for all listeners'
         >
           <IconPlayerStopFilled {...getIconProps('md')} />
         </ActionIcon>

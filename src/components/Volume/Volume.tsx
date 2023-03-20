@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Slider, Sx } from '@mantine/core';
+import { ActionIcon, Group, Slider, Sx, Tooltip } from '@mantine/core';
 import { IconVolume, IconVolume2, IconVolumeOff } from '@tabler/icons-react';
 import { useMasterVolume } from 'lib/state';
 import { getIconProps } from 'lib/theme';
@@ -23,15 +23,21 @@ const Volume = ({ sx = {} }: VolumeProps) => {
 
   return (
     <Group spacing='xs' sx={sx}>
-      <ActionIcon onClick={handleMute} color={muted ? 'red' : 'default'}>
-        {muted ? (
-          <IconVolumeOff {...getIconProps('md')} />
-        ) : volume <= 0.5 ? (
-          <IconVolume2 {...getIconProps('md')} />
-        ) : (
-          <IconVolume {...getIconProps('md')} />
-        )}
-      </ActionIcon>
+      <Tooltip label={muted ? 'Unmute' : 'Mute'}>
+        <ActionIcon
+          onClick={handleMute}
+          color={muted ? 'red' : 'default'}
+          aria-label={muted ? 'Unmute' : 'Mute'}
+        >
+          {muted ? (
+            <IconVolumeOff {...getIconProps('md')} />
+          ) : volume <= 0.5 ? (
+            <IconVolume2 {...getIconProps('md')} />
+          ) : (
+            <IconVolume {...getIconProps('md')} />
+          )}
+        </ActionIcon>
+      </Tooltip>
       <Slider
         size='sm'
         value={volume}

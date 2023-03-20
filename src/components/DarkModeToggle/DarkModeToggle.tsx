@@ -7,18 +7,21 @@ type DarkModeToggleProps = { sx?: Sx };
 
 const DarkModeToggle = ({ sx = {} }: DarkModeToggleProps) => {
   const [, toggleColorScheme, userColorScheme] = useDarkModeSetting();
+  const label =
+    userColorScheme === 'system'
+      ? 'Automatic'
+      : userColorScheme === 'dark'
+      ? 'Dark Mode'
+      : 'Light Mode';
 
   return (
-    <Tooltip
-      label={
-        userColorScheme === 'system'
-          ? 'Automatic'
-          : userColorScheme === 'dark'
-          ? 'Dark Mode'
-          : 'Light Mode'
-      }
-    >
-      <ActionIcon onClick={toggleColorScheme} color='default' sx={sx}>
+    <Tooltip label={label}>
+      <ActionIcon
+        onClick={toggleColorScheme}
+        color='default'
+        sx={sx}
+        aria-label={label}
+      >
         {userColorScheme === 'system' ? (
           <IconSunMoon {...getIconProps('md')} />
         ) : userColorScheme === 'dark' ? (

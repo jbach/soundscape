@@ -8,7 +8,6 @@ import {
   Stack,
   Text,
   Title,
-  rem,
 } from '@mantine/core';
 import { useIntersection } from '@mantine/hooks';
 import { IconMusic } from '@tabler/icons-react';
