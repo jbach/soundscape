@@ -1,9 +1,11 @@
-import { ActionIcon, Group, Slider } from '@mantine/core';
+import { ActionIcon, Group, Slider, Sx } from '@mantine/core';
 import { IconVolume, IconVolume2, IconVolumeOff } from '@tabler/icons-react';
 import { useMasterVolume } from 'lib/state';
 import { useCallback, useRef } from 'react';
 
-const Volume = () => {
+type VolumeProps = { sx?: Sx };
+
+const Volume = ({ sx = {} }: VolumeProps) => {
   const [volume, setVolume] = useMasterVolume();
   const restoreVolume = useRef(volume);
   const muted = volume === 0;
@@ -19,12 +21,8 @@ const Volume = () => {
   }, [setVolume, muted]);
 
   return (
-    <Group spacing='xs'>
-      <ActionIcon
-        onClick={handleMute}
-        variant='subtle'
-        color={muted ? 'red' : 'default'}
-      >
+    <Group spacing='xs' sx={sx}>
+      <ActionIcon onClick={handleMute} color={muted ? 'red' : 'default'}>
         {muted ? (
           <IconVolumeOff size='1.125rem' />
         ) : volume <= 0.5 ? (

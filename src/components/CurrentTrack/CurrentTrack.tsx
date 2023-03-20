@@ -17,12 +17,12 @@ type CurrentTrackProps = { sx?: Sx };
 
 const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
   const [currentTrack, setCurrentTrack] = useCurrentTrack();
-
   if (!currentTrack) {
     return (
       <Box
         sx={(theme) => ({
           borderRadius: theme.radius.md,
+          ...sx,
         })}
         bg='gray.0'
         p='xs'
@@ -59,7 +59,7 @@ const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
             <Text c='dimmed' fz='sm' ml='xs' mr='xs' fw={500}>
               {currentTrack.track_title}
             </Text>
-            <Tooltip label='Stop playback for all listeners' withArrow>
+            <Tooltip label='Stop playback for all listeners'>
               <ActionIcon
                 color='red'
                 onClick={() => {

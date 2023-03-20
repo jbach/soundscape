@@ -1,20 +1,17 @@
-import { ActionIcon, CopyButton, Tooltip } from '@mantine/core';
+import { ActionIcon, CopyButton, Sx, Tooltip } from '@mantine/core';
 import { IconClipboardCheck, IconLink } from '@tabler/icons-react';
 
-const CopyLink = () => {
+type CopyLinkProps = { sx?: Sx };
+
+const CopyLink = ({ sx = {} }: CopyLinkProps) => {
   return (
     <CopyButton value={window.location.href} timeout={1500}>
       {({ copied, copy }) => (
-        <Tooltip
-          label={copied ? 'URL was copied' : 'Copy URL'}
-          withArrow
-          position='bottom'
-        >
+        <Tooltip label={copied ? 'URL was copied' : 'Copy URL'}>
           <ActionIcon
             onClick={copy}
-            variant='subtle'
             color={copied ? 'green' : 'default'}
-            sx={{ marginLeft: 'auto' }}
+            sx={sx}
           >
             {copied ? (
               <IconClipboardCheck size='1.125rem' />
