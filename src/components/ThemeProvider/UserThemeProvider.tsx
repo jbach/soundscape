@@ -1,9 +1,27 @@
-import { MantineProvider } from '@mantine/core';
+import { ColorSchemeProvider, MantineProvider } from '@mantine/core';
+import { useDarkModeSetting } from 'lib/state';
 
 type UserThemeProviderProps = { children: React.ReactNode };
 
 const UserThemeProvider = ({ children }: UserThemeProviderProps) => {
-  return <MantineProvider inherit>{children}</MantineProvider>;
+  const [colorScheme, toggleColorScheme] = useDarkModeSetting();
+
+  return (
+    <ColorSchemeProvider
+      colorScheme={colorScheme}
+      toggleColorScheme={toggleColorScheme}
+    >
+      <MantineProvider
+        withGlobalStyles
+        theme={{
+          colorScheme,
+        }}
+        inherit
+      >
+        {children}
+      </MantineProvider>
+    </ColorSchemeProvider>
+  );
 };
 
 export default UserThemeProvider;

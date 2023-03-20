@@ -1,8 +1,9 @@
 import { AppShell, Header, Group, Container } from '@mantine/core';
-import Volume from 'components/Volume/Volume';
-import CurrentTrack from 'components/CurrentTrack/CurrentTrack';
+import Volume from 'components/Volume';
+import CurrentTrack from 'components/CurrentTrack';
 import CopyLink from 'components/CopyLink';
-import Tracks from 'components/Tracks/Tracks';
+import Tracks from 'components/Tracks';
+import DarkModeToggle from 'components/DarkModeToggle';
 
 const Room = () => {
   return (
@@ -12,6 +13,7 @@ const Room = () => {
         <Header height={60}>
           <Group sx={{ height: '100%' }} px={20}>
             <CurrentTrack />
+            <DarkModeToggle sx={{ marginLeft: 'auto' }} />
             <CopyLink />
             <Volume />
           </Group>

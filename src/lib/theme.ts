@@ -16,6 +16,13 @@ const theme: MantineThemeOverride = {
       height: '100%',
     },
   }),
+  components: {
+    Tooltip: {
+      defaultProps: {
+        withArrow: true,
+      },
+    },
+  },
 };
 
 export default theme;
