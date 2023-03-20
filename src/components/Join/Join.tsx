@@ -1,6 +1,7 @@
 import { Button, Center } from '@mantine/core';
 import { IconDoorEnter } from '@tabler/icons-react';
 import { useHasInteracted } from 'lib/state';
+import { getIconProps } from 'lib/theme';
 
 const Join = () => {
   const [, setHasInteracted] = useHasInteracted();
@@ -10,7 +11,7 @@ const Join = () => {
       <Button
         size='lg'
         onClick={() => setHasInteracted(true)}
-        leftIcon={<IconDoorEnter />}
+        leftIcon={<IconDoorEnter {...getIconProps('lg')} />}
       >
         Join Room
       </Button>

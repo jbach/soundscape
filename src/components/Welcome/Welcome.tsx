@@ -2,6 +2,7 @@ import { Button, Center } from '@mantine/core';
 import { IconMusic } from '@tabler/icons-react';
 import humanId from 'human-id';
 import { hasInteractedState, roomIdState } from 'lib/state';
+import { getIconProps } from 'lib/theme';
 import { useRecoilTransaction_UNSTABLE } from 'recoil';
 
 const Welcome = () => {
@@ -13,7 +14,11 @@ const Welcome = () => {
 
   return (
     <Center h='100%'>
-      <Button size='lg' onClick={createSession} leftIcon={<IconMusic />}>
+      <Button
+        size='lg'
+        onClick={createSession}
+        leftIcon={<IconMusic {...getIconProps('lg')} />}
+      >
         Create Session
       </Button>
     </Center>

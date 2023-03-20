@@ -8,9 +8,12 @@ import {
   Stack,
   Text,
   Title,
+  rem,
 } from '@mantine/core';
 import { useIntersection } from '@mantine/hooks';
+import { IconMusic } from '@tabler/icons-react';
 import { useCurrentTrack } from 'lib/state';
+import { getIconProps } from 'lib/theme';
 import { rawTracks } from 'lib/tracks';
 
 type TrackProps = {
@@ -36,9 +39,11 @@ const Track = ({ track }: TrackProps) => {
     >
       <Card.Section pos='relative'>
         <Image
+          height={180}
           src={isVisible ? track.large_image : null}
           alt={track.flavor_text}
           withPlaceholder
+          placeholder={<IconMusic {...getIconProps('placeholder')} />}
         />
         <Badge
           size='xs'

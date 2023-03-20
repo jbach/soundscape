@@ -1,5 +1,6 @@
 import { Alert, Center, Code, Container } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
+import { getIconProps } from 'lib/theme';
 import { FallbackProps } from 'react-error-boundary';
 
 const FatalError = ({ error }: FallbackProps) => {
@@ -7,7 +8,7 @@ const FatalError = ({ error }: FallbackProps) => {
     <Container h='100%' size='xs'>
       <Center h='100%'>
         <Alert
-          icon={<IconAlertCircle size='1rem' />}
+          icon={<IconAlertCircle {...getIconProps('md')} />}
           title='Bummer!'
           color='red'
         >

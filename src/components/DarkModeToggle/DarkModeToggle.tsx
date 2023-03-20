@@ -1,6 +1,7 @@
 import { ActionIcon, Sx, Tooltip } from '@mantine/core';
 import { IconMoon, IconSun, IconSunMoon } from '@tabler/icons-react';
 import { useDarkModeSetting } from 'lib/state';
+import { getIconProps } from 'lib/theme';
 
 type DarkModeToggleProps = { sx?: Sx };
 
@@ -19,11 +20,11 @@ const DarkModeToggle = ({ sx = {} }: DarkModeToggleProps) => {
     >
       <ActionIcon onClick={toggleColorScheme} color='default' sx={sx}>
         {userColorScheme === 'system' ? (
-          <IconSunMoon size='1.125rem' />
+          <IconSunMoon {...getIconProps('md')} />
         ) : userColorScheme === 'dark' ? (
-          <IconMoon size='1.125rem' />
+          <IconMoon {...getIconProps('md')} />
         ) : (
-          <IconSun size='1.125rem' />
+          <IconSun {...getIconProps('md')} />
         )}
       </ActionIcon>
     </Tooltip>

@@ -1,5 +1,6 @@
 import { ActionIcon, CopyButton, Sx, Tooltip } from '@mantine/core';
 import { IconClipboardCheck, IconLink } from '@tabler/icons-react';
+import { getIconProps } from 'lib/theme';
 
 type CopyLinkProps = { sx?: Sx };
 
@@ -14,9 +15,9 @@ const CopyLink = ({ sx = {} }: CopyLinkProps) => {
             sx={sx}
           >
             {copied ? (
-              <IconClipboardCheck size='1.125rem' />
+              <IconClipboardCheck {...getIconProps('md')} />
             ) : (
-              <IconLink size='1.125rem' />
+              <IconLink {...getIconProps('md')} />
             )}
           </ActionIcon>
         </Tooltip>

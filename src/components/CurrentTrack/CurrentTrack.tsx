@@ -13,9 +13,9 @@ import {
   Tooltip,
   rem,
 } from '@mantine/core';
-import { IconPlayerStopFilled } from '@tabler/icons-react';
-import { IconPhoto } from '@tabler/icons-react';
+import { IconMusic, IconPlayerStopFilled } from '@tabler/icons-react';
 import { useCurrentTrack } from 'lib/state';
+import { getIconProps } from 'lib/theme';
 
 type CurrentTrackProps = { sx?: Sx };
 
@@ -84,7 +84,7 @@ const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
                     cursor: 'help',
                   }}
                 >
-                  <IconPhoto size='1.5rem' />
+                  <IconMusic {...getIconProps('md')} />
                 </Avatar>
               </HoverCard.Target>
               <HoverCard.Dropdown>
