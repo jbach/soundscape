@@ -8,7 +8,6 @@ const player = {
     Howler.volume(perceptualToAmplitude(volume));
   },
   stop: () => {
-    console.log('player.stop()');
     Howler.unload();
   },
   play: (nextTrack: TrackId) => {
@@ -25,6 +24,7 @@ const player = {
       html5: true,
       autoplay: true,
       format: ['mp3'],
+      loop: true,
     });
   },
 };
