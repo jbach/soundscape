@@ -1,12 +1,29 @@
 import { SimpleGrid } from '@mantine/core';
-import { rawTracks } from 'lib/tracks';
-import Track from './Track';
+import TrackCard from './TrackCard';
+import { useTracks } from 'lib/state';
 
 const Tracks = () => {
+  const tracks = useTracks();
+
   return (
-    <SimpleGrid cols={3}>
-      {rawTracks.slice(0, 20).map((track) => (
-        <Track key={track.key} track={track} />
+    <SimpleGrid
+      breakpoints={[
+        {
+          minWidth: 'xs',
+          cols: 2,
+        },
+        {
+          minWidth: 'sm',
+          cols: 3,
+        },
+        {
+          minWidth: 'md',
+          cols: 4,
+        },
+      ]}
+    >
+      {tracks.slice(0, 25).map((track) => (
+        <TrackCard key={track.id} track={track} />
       ))}
     </SimpleGrid>
   );

@@ -5,9 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { RecoilRoot } from 'recoil';
 import FatalError from './FatalError';
 import Loading from './Loading';
-import LocalStorageStore from './LocalStorageStore';
-import YjsStore from './YjsStore';
-import UrlStore from './UrlStore';
+import { LocalStorageStore, UrlStore, YjsStore } from 'components/SyncStores';
 
 const Root = () => {
   return (

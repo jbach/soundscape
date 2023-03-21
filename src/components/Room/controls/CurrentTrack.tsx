@@ -1,18 +1,15 @@
 import {
   ActionIcon,
-  Avatar,
   BackgroundImage,
   Box,
   Center,
   Group,
-  HoverCard,
-  Image,
   Sx,
   Text,
-  Title,
   Tooltip,
 } from '@mantine/core';
-import { IconMusic, IconPlayerStopFilled } from '@tabler/icons-react';
+import { IconPlayerStopFilled } from '@tabler/icons-react';
+import TrackAvatar from 'components/TrackAvatar/TrackAvatar';
 import { useCurrentTrack } from 'lib/state';
 import { getIconProps } from 'lib/theme';
 
@@ -46,7 +43,10 @@ const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
   return (
     <Group spacing='xs' sx={sx} noWrap>
       <BackgroundImage
-        src={currentTrack.large_image}
+        src={
+          currentTrack.image ??
+          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+        }
         radius='md'
         sx={(theme) => ({
           overflow: 'hidden',
@@ -64,38 +64,14 @@ const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
           })}
         >
           <Group spacing='md' noWrap>
-            <HoverCard width={320} shadow='md' withArrow>
-              <HoverCard.Target>
-                <Avatar
-                  src={currentTrack.large_image}
-                  alt={currentTrack.flavor_text}
-                  radius='md'
-                  sx={{
-                    cursor: 'help',
-                  }}
-                  color='default'
-                >
-                  <IconMusic {...getIconProps('md')} />
-                </Avatar>
-              </HoverCard.Target>
-              <HoverCard.Dropdown>
-                <Text fz='xs' c='dimmed' mb='xs'>
-                  Currently playing:
-                </Text>
-                <Title order={5}>{currentTrack.track_title}</Title>
-                <Text size='sm' color='dimmed' mb='md'>
-                  {currentTrack.flavor_text}
-                </Text>
-                <Image
-                  src={currentTrack.large_image}
-                  alt={currentTrack.flavor_text}
-                  withPlaceholder
-                  radius='sm'
-                />
-              </HoverCard.Dropdown>
-            </HoverCard>
+            <TrackAvatar
+              track={currentTrack}
+              color='default'
+              radius='md'
+              title='Currently playing:'
+            />
             <Text fz='sm' fw={500}>
-              {currentTrack.track_title}
+              {currentTrack.title}
             </Text>
           </Group>
         </Center>

@@ -1,12 +1,21 @@
 import * as S from '@effect/schema/Schema';
 import { atom, useRecoilState } from 'recoil';
 import { getSyncEffect } from './helpers/sync';
-import { RoomId, RoomIdSchema } from 'lib/schemas';
+import { RoomIdSchema } from 'lib/schemas';
 
-export const roomIdState = atom<RoomId | undefined>({
+// -- schema
+const CurrentRoomIdSchema = S.union(RoomIdSchema, S.undefined);
+type CurrentRoomId = S.To<typeof CurrentRoomIdSchema>;
+
+// -- effects
+const syncHashEffect = getSyncEffect('hash', CurrentRoomIdSchema);
+
+// -- atom
+export const roomIdState = atom<CurrentRoomId>({
   key: 'roomId',
   default: undefined,
-  effects: [getSyncEffect('hash', S.union(RoomIdSchema, S.undefined))],
+  effects: [syncHashEffect],
 });
 
+// -- public api
 export const useRoomId = () => useRecoilState(roomIdState);

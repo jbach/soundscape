@@ -38,12 +38,21 @@ const theme: MantineThemeOverride = {
     '"InterVariable", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji',
   fontFamilyMonospace:
     '"iA Writer Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace',
+  headings: {
+    sizes: {
+      h6: {
+        fontSize: rem(12),
+        fontWeight: 600,
+      },
+    },
+  },
   globalStyles: () => ({
     html: {
       height: '100%',
     },
     body: {
       height: '100%',
+      userSelect: 'none',
     },
     '#root': {
       height: '100%',

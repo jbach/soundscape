@@ -9,7 +9,7 @@ const DarkModeToggle = ({ sx = {} }: DarkModeToggleProps) => {
   const [, toggleColorScheme, userColorScheme] = useDarkModeSetting();
   const label =
     userColorScheme === 'system'
-      ? 'Automatic'
+      ? 'Automatic Mode'
       : userColorScheme === 'dark'
       ? 'Dark Mode'
       : 'Light Mode';

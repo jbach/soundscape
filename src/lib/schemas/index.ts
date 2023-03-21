@@ -4,3 +4,5 @@ export * from './FileSource';
 export * from './Source';
 export * from './Volume';
 export * from './TrackId';
+export * from './Track';
+export * from './Url';
