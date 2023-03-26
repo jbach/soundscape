@@ -6,3 +6,5 @@ export * from './Volume';
 export * from './TrackId';
 export * from './Track';
 export * from './Url';
+export * from './Sound';
+export * from './SoundNode';

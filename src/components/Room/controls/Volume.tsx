@@ -1,37 +1,45 @@
 import { ActionIcon, Group, Slider, Sx, Tooltip } from '@mantine/core';
 import { IconVolume, IconVolume2, IconVolumeOff } from '@tabler/icons-react';
-import { useMasterVolume } from 'lib/state';
+import { VolumeValue } from 'lib/schemas';
+import { volumeFamily } from 'lib/state';
 import { getIconProps } from 'lib/theme';
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
+import { useRecoilState } from 'recoil';
 
 type VolumeProps = { sx?: Sx };
 
+// todo: debounce
 const Volume = ({ sx = {} }: VolumeProps) => {
-  const [volume, setVolume] = useMasterVolume();
-  const restoreVolume = useRef(volume);
-  const muted = volume === 0;
+  const [volume, setVolume] = useRecoilState(volumeFamily('root'));
 
-  const handleMute = useCallback(() => {
-    if (muted) {
-      // restore
-      setVolume(restoreVolume.current);
-    } else {
-      // mute
-      setVolume(0);
-    }
-  }, [setVolume, muted]);
+  // handles slider dragging
+  const handleChange = useCallback(
+    (nextValue: VolumeValue) => {
+      setVolume((prev) => ({ muted: false, value: nextValue }));
+    },
+    [setVolume]
+  );
+
+  const muted = volume.value === 0 || volume.muted;
 
   return (
     <Group spacing='xs' sx={sx}>
       <Tooltip label={muted ? 'Unmute' : 'Mute'}>
         <ActionIcon
-          onClick={handleMute}
+          onClick={() => {
+            setVolume((prev) => {
+              if (prev.value === 0) {
+                return { value: 0.75, muted: false };
+              }
+              return { ...prev, muted: !prev.muted };
+            });
+          }}
           color={muted ? 'red' : 'default'}
           aria-label={muted ? 'Unmute' : 'Mute'}
         >
           {muted ? (
             <IconVolumeOff {...getIconProps('md')} />
-          ) : volume <= 0.5 ? (
+          ) : volume.value <= 0.5 ? (
             <IconVolume2 {...getIconProps('md')} />
           ) : (
             <IconVolume {...getIconProps('md')} />
@@ -40,7 +48,7 @@ const Volume = ({ sx = {} }: VolumeProps) => {
       </Tooltip>
       <Slider
         size='sm'
-        value={volume}
+        value={muted ? 0 : volume.value}
         min={0}
         max={1}
         step={0.02}
@@ -48,12 +56,7 @@ const Volume = ({ sx = {} }: VolumeProps) => {
         label={null}
         thumbSize={14}
         color={muted ? 'red' : 'default'}
-        onChange={setVolume}
-        onChangeEnd={(endValue) => {
-          if (endValue > 0) {
-            restoreVolume.current = endValue;
-          }
-        }}
+        onChange={handleChange}
       />
     </Group>
   );

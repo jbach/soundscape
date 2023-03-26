@@ -50,7 +50,7 @@ const YjsStore = ({
   }, []);
 
   // write atom to yjs
-  const write = useCallback<WriteItems>(({ diff }) => {
+  const write = useCallback<WriteItems>(({ diff, allItems }) => {
     for (const [itemKey, value] of diff) {
       if (value instanceof DefaultValue) {
         ymap.current.delete(itemKey);
@@ -61,7 +61,7 @@ const YjsStore = ({
   }, []);
 
   // listen for specific changes in yjs
-  const listen: ListenToItems = useCallback(({ updateItem, updateItems }) => {
+  const listen: ListenToItems = useCallback(({ updateItems }) => {
     const onUpdate = ({ changes }: Y.YMapEvent<unknown>) => {
       const changeSet = Array.from(changes.keys).map(([key, { action }]) => {
         if (action === 'delete') {

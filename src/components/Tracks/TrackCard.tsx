@@ -2,18 +2,28 @@ import { Badge, Button, Card, Group, Image, Text, Title } from '@mantine/core';
 import { useIntersection } from '@mantine/hooks';
 import { IconMusic } from '@tabler/icons-react';
 import { Track } from 'lib/schemas';
-import { useCurrentTrack } from 'lib/state';
+import { currentTrackState } from 'lib/state';
 import { getIconProps } from 'lib/theme';
+import { useCallback } from 'react';
+import { useRecoilState } from 'recoil';
 
 type TrackCardProps = {
   track: Track;
 };
 
 const TrackCard = ({ track }: TrackCardProps) => {
-  const [currentTrack, setCurrentTrack] = useCurrentTrack();
+  const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackState);
+
   const { ref, entry } = useIntersection({});
   const isPlaying = currentTrack?.id === track.id;
   const isVisible = entry?.isIntersecting;
+  const togglePlay = useCallback(() => {
+    setCurrentTrack((prevTrack) => {
+      if (!prevTrack || prevTrack.id !== track.id) {
+        return track;
+      }
+    });
+  }, [setCurrentTrack, track]);
 
   return (
     <Card
@@ -93,22 +103,11 @@ const TrackCard = ({ track }: TrackCardProps) => {
         })}
       >
         {isPlaying ? (
-          <Button
-            onClick={() => {
-              setCurrentTrack(undefined);
-            }}
-            color='red'
-            fullWidth
-          >
+          <Button onClick={togglePlay} color='red' fullWidth>
             Stop
           </Button>
         ) : (
-          <Button
-            fullWidth
-            onClick={() => {
-              setCurrentTrack(track.id);
-            }}
-          >
+          <Button fullWidth onClick={togglePlay}>
             Play
           </Button>
         )}

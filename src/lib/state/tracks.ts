@@ -40,7 +40,7 @@ export const tracksMapState = selector<TracksMap>({
 /**
  * given a TrackId, this selector will return the corresponding full Track
  */
-export const findTrackState = selectorFamily({
+export const findTrack = selectorFamily({
   key: 'findTrack',
   get:
     (trackId: TrackId | undefined) =>

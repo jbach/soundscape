@@ -10,13 +10,14 @@ import {
 } from '@mantine/core';
 import { IconPlayerStopFilled } from '@tabler/icons-react';
 import TrackAvatar from 'components/TrackAvatar/TrackAvatar';
-import { useCurrentTrack } from 'lib/state';
+import { currentTrackState, useCurrentTrack } from 'lib/state';
 import { getIconProps } from 'lib/theme';
+import { useRecoilState } from 'recoil';
 
 type CurrentTrackProps = { sx?: Sx };
 
 const CurrentTrack = ({ sx = {} }: CurrentTrackProps) => {
-  const [currentTrack, setCurrentTrack] = useCurrentTrack();
+  const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackState);
 
   // nothing playing, show fallback
   if (!currentTrack) {
