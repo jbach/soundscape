@@ -10,7 +10,7 @@ import {
 } from '@mantine/core';
 import { IconPlayerStopFilled } from '@tabler/icons-react';
 import TrackAvatar from 'components/TrackAvatar/TrackAvatar';
-import { currentTrackState, useCurrentTrack } from 'lib/state';
+import { currentTrackState } from 'lib/state';
 import { getIconProps } from 'lib/theme';
 import { useRecoilState } from 'recoil';
 
