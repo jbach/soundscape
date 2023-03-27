@@ -1,4 +1,11 @@
-import { DefaultValue, selector, selectorFamily, useRecoilValue } from 'recoil';
+import {
+  DefaultValue,
+  selector,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from 'recoil';
 import { SoundNodeId, Track, TrackId, decodeTrack } from 'lib/schemas';
 import defaultTracks from 'lib/defaultTracks';
 import { getNodeSounds, soundNodeFamily } from './soundNode';
@@ -8,6 +15,19 @@ import {
 } from 'lib/constants';
 import { soundFamily } from './sound';
 import humanId from 'human-id';
+import { useCallback } from 'react';
+import { volumeFamily } from './volume';
+
+const cleanTags = (tags: ReadonlyArray<string>) => {
+  // clean & deduplicate
+  return [
+    ...new Set(
+      tags.reduce((arr, tag) => {
+        return [...arr, ...tag.split(', ')];
+      }, [] as string[])
+    ),
+  ];
+};
 
 type TracksMap = Record<string, Track>;
 
@@ -30,8 +50,8 @@ export const tracksListState = selector<Track[]>({
     const tracks = get(tracksState);
     return tracks.map((track) => ({
       ...track,
-      tags: [...new Set(track.tags)],
-      genre: [...new Set(track.genre)],
+      tags: cleanTags(track.tags),
+      genre: cleanTags(track.genre),
     }));
   },
 });
@@ -47,12 +67,7 @@ export const tracksMapState = selector<TracksMap>({
     return tracks.reduce(
       (obj, track) => ({
         ...obj,
-        [track.id]: decodeTrack({
-          ...track,
-          // deduplicate tags + genre
-          tags: [...new Set(track.tags)],
-          genre: [...new Set(track.genre)],
-        }),
+        [track.id]: decodeTrack(track),
       }),
       {} as TracksMap
     );
@@ -173,3 +188,39 @@ export const getSingleTrack = selectorFamily({
 export const useTracks = () => useRecoilValue(tracksListState);
 export const currentTrackState = getSingleTrack(SHARED_SOUNDSCAPE_NODE_ID);
 export const localTrackState = getSingleTrack(LOCAL_SOUNDSCAPE_NODE_ID);
+
+export const useCurrentTrack = (track: Track) => {
+  const setSharedVolume = useSetRecoilState(
+    volumeFamily(SHARED_SOUNDSCAPE_NODE_ID)
+  );
+
+  const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackState);
+  const setLocalTrack = useSetRecoilState(localTrackState);
+
+  const isPlaying = currentTrack?.id === track.id;
+
+  const toggleCurrentTrack = useCallback(() => {
+    setSharedVolume((prev) => ({ ...prev, muted: false }));
+    setLocalTrack(undefined);
+    setCurrentTrack(isPlaying ? undefined : track);
+  }, [setLocalTrack, setCurrentTrack, track, setSharedVolume, isPlaying]);
+
+  return [toggleCurrentTrack, isPlaying] as const;
+};
+
+export const usePreview = (track: Track) => {
+  const setSharedVolume = useSetRecoilState(
+    volumeFamily(SHARED_SOUNDSCAPE_NODE_ID)
+  );
+
+  const [localTrack, setLocalTrack] = useRecoilState(localTrackState);
+
+  const isPlaying = localTrack?.id === track.id;
+
+  const togglePreview = useCallback(() => {
+    setSharedVolume((prev) => ({ ...prev, muted: !isPlaying }));
+    setLocalTrack(isPlaying ? undefined : track);
+  }, [setLocalTrack, track, setSharedVolume, isPlaying]);
+
+  return [togglePreview, isPlaying] as const;
+};

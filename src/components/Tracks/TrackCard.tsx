@@ -8,45 +8,20 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { useIntersection } from '@mantine/hooks';
 import { IconMusic } from '@tabler/icons-react';
-import { SHARED_SOUNDSCAPE_NODE_ID } from 'lib/constants';
 import { Track } from 'lib/schemas';
-import { currentTrackState, localTrackState, volumeFamily } from 'lib/state';
+import { useCurrentTrack, usePreview } from 'lib/state';
 import { getIconProps } from 'lib/theme';
-import { useCallback } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { memo } from 'react';
 
 type TrackCardProps = {
   track: Track;
   highlight: string;
 };
 
-const TrackCard = ({ track, highlight }: TrackCardProps) => {
-  const setSharedVolume = useSetRecoilState(
-    volumeFamily(SHARED_SOUNDSCAPE_NODE_ID)
-  );
-  const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackState);
-  const [localTrack, setLocalTrack] = useRecoilState(localTrackState);
-
-  const isPlaying = currentTrack?.id === track.id;
-  const isPreviewing = localTrack?.id === track.id;
-  const togglePlay = useCallback(() => {
-    setCurrentTrack((prevTrack) => {
-      if (!prevTrack || prevTrack.id !== track.id) {
-        return track;
-      }
-    });
-  }, [setCurrentTrack, track]);
-
-  const togglePreview = useCallback(() => {
-    setLocalTrack((prevTrack) => {
-      // todo: seek to middle
-      if (!prevTrack || prevTrack.id !== track.id) {
-        return track;
-      }
-    });
-  }, [setLocalTrack, track]);
+const TrackCard = memo(({ track, highlight }: TrackCardProps) => {
+  const [togglePreview, isPreviewing] = usePreview(track);
+  const [togglePlay, isPlaying] = useCurrentTrack(track);
 
   return (
     <Card
@@ -135,25 +110,11 @@ const TrackCard = ({ track, highlight }: TrackCardProps) => {
           </Button>
         ) : (
           <Button.Group>
-            <Button
-              fullWidth
-              onClick={() => {
-                setSharedVolume((prev) => ({ ...prev, muted: false }));
-                setLocalTrack(undefined);
-                togglePlay();
-              }}
-            >
+            <Button fullWidth onClick={togglePlay}>
               Play
             </Button>
             {isPreviewing ? (
-              <Button
-                onClick={() => {
-                  setSharedVolume((prev) => ({ ...prev, muted: false }));
-                  togglePreview();
-                }}
-                color='red'
-                fullWidth
-              >
+              <Button onClick={togglePreview} color='red' fullWidth>
                 Stop Preview
               </Button>
             ) : (
@@ -161,10 +122,7 @@ const TrackCard = ({ track, highlight }: TrackCardProps) => {
                 fullWidth
                 variant='light'
                 disabled={isPlaying}
-                onClick={() => {
-                  setSharedVolume((prev) => ({ ...prev, muted: true }));
-                  togglePreview();
-                }}
+                onClick={togglePreview}
               >
                 Preview
               </Button>
@@ -174,6 +132,6 @@ const TrackCard = ({ track, highlight }: TrackCardProps) => {
       </Card.Section>
     </Card>
   );
-};
+});
 
 export default TrackCard;

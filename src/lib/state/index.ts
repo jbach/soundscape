@@ -5,4 +5,4 @@ export * from './tracks';
 export * from './volume';
 export * from './soundNode';
 export * from './sound';
-export * from './search';
+export * from './filteredTracks';
