@@ -1,4 +1,13 @@
-import { Badge, Button, Card, Group, Image, Text, Title } from '@mantine/core';
+import {
+  Badge,
+  Button,
+  Card,
+  Group,
+  Highlight,
+  Image,
+  Text,
+  Title,
+} from '@mantine/core';
 import { useIntersection } from '@mantine/hooks';
 import { IconMusic } from '@tabler/icons-react';
 import { SHARED_SOUNDSCAPE_NODE_ID } from 'lib/constants';
@@ -10,19 +19,18 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 type TrackCardProps = {
   track: Track;
+  highlight: string;
 };
 
-const TrackCard = ({ track }: TrackCardProps) => {
+const TrackCard = ({ track, highlight }: TrackCardProps) => {
   const setSharedVolume = useSetRecoilState(
     volumeFamily(SHARED_SOUNDSCAPE_NODE_ID)
   );
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackState);
   const [localTrack, setLocalTrack] = useRecoilState(localTrackState);
 
-  const { ref, entry } = useIntersection({});
   const isPlaying = currentTrack?.id === track.id;
   const isPreviewing = localTrack?.id === track.id;
-  const isVisible = entry?.isIntersecting;
   const togglePlay = useCallback(() => {
     setCurrentTrack((prevTrack) => {
       if (!prevTrack || prevTrack.id !== track.id) {
@@ -43,7 +51,6 @@ const TrackCard = ({ track }: TrackCardProps) => {
   return (
     <Card
       key={track.id}
-      ref={ref}
       shadow='sm'
       withBorder
       sx={(theme) => ({
@@ -54,7 +61,7 @@ const TrackCard = ({ track }: TrackCardProps) => {
       <Card.Section pos='relative'>
         <Image
           height={180}
-          src={isVisible ? track.image ?? null : null}
+          src={track.image ?? null}
           alt={track.description ?? track.title}
           withPlaceholder
           placeholder={<IconMusic {...getIconProps('placeholder')} />}
@@ -71,10 +78,14 @@ const TrackCard = ({ track }: TrackCardProps) => {
         </Badge>
       </Card.Section>
       <Card.Section inheritPadding py='sm'>
-        <Title order={5}>{track.title}</Title>
-        <Text size='sm' color='dimmed'>
-          {track.description}
-        </Text>
+        <Title order={5}>
+          <Highlight highlight={highlight}>{track.title}</Highlight>
+        </Title>
+        {track.description ? (
+          <Text size='sm' color='dimmed'>
+            <Highlight highlight={highlight}>{track.description}</Highlight>
+          </Text>
+        ) : null}
       </Card.Section>
       <Card.Section withBorder inheritPadding py='sm'>
         <Group spacing='sm' noWrap align='start'>
@@ -84,7 +95,7 @@ const TrackCard = ({ track }: TrackCardProps) => {
           <Group spacing='xs'>
             {track.genre.map((item) => (
               <Badge size='xs' key={item}>
-                {item}
+                <Highlight highlight={highlight}>{item}</Highlight>
               </Badge>
             ))}
           </Group>
@@ -98,7 +109,7 @@ const TrackCard = ({ track }: TrackCardProps) => {
           <Group spacing='xs'>
             {track.tags.map((item) => (
               <Badge size='xs' key={item} color='gray'>
-                {item}
+                <Highlight highlight={highlight}>{item}</Highlight>
               </Badge>
             ))}
           </Group>

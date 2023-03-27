@@ -22,12 +22,27 @@ export const tracksState = selector({
 // -- selectors
 
 /**
+ * returns all tracks
+ */
+export const tracksListState = selector<Track[]>({
+  key: 'tracksList',
+  get: ({ get }) => {
+    const tracks = get(tracksState);
+    return tracks.map((track) => ({
+      ...track,
+      tags: [...new Set(track.tags)],
+      genre: [...new Set(track.genre)],
+    }));
+  },
+});
+
+/**
  * returns all tracks as map keyed by TrackId
  */
 export const tracksMapState = selector<TracksMap>({
   key: 'tracksMap',
   get: ({ get }) => {
-    const tracks = get(tracksState);
+    const tracks = get(tracksListState);
 
     return tracks.reduce(
       (obj, track) => ({
@@ -66,6 +81,9 @@ export const findTrack = selectorFamily({
     },
 });
 
+/**
+ * given a SoundNodeId, this selector will return the first running sound
+ */
 export const getSingleTrack = selectorFamily({
   key: 'singleTrack',
   get:
@@ -152,6 +170,6 @@ export const getSingleTrack = selectorFamily({
 });
 
 // -- public api
-export const useTracks = () => useRecoilValue(tracksState);
+export const useTracks = () => useRecoilValue(tracksListState);
 export const currentTrackState = getSingleTrack(SHARED_SOUNDSCAPE_NODE_ID);
 export const localTrackState = getSingleTrack(LOCAL_SOUNDSCAPE_NODE_ID);

@@ -4,6 +4,7 @@ import Volume from './controls/Volume';
 import CopyLink from './controls/CopyLink';
 import DarkModeToggle from './controls/DarkModeToggle';
 import CurrentTrack from './controls/CurrentTrack';
+import Search from './controls/Search';
 
 const Room = () => {
   return (
@@ -13,6 +14,7 @@ const Room = () => {
         <Header height={60}>
           <Group sx={{ height: '100%' }} px={20}>
             <CurrentTrack />
+            <Search />
             <DarkModeToggle sx={{ marginLeft: 'auto' }} />
             <CopyLink />
             <Volume />
