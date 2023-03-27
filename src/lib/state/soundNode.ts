@@ -8,7 +8,6 @@ import {
   SoundNodeStateSchema,
 } from 'lib/schemas';
 import { soundFamily } from './sound';
-import humanId from 'human-id';
 import { getSyncEffect } from './helpers/sync';
 import {
   LOCAL_SOUNDSCAPE_NODE_ID,
@@ -17,7 +16,6 @@ import {
 } from 'lib/constants';
 import getLogEffect from './helpers/logEffect';
 import syncFaviconEffect from './helpers/syncFaviconEffect';
-import { findTrack } from './tracks';
 
 // sync effects
 const syncSharedEffect = getSyncEffect('shared', SoundNodeStateSchema);
@@ -200,74 +198,4 @@ export const getPath = selectorFamily<SoundNodePath, SoundNodeId>({
 
       return _getPath(nodeId, []);
     },
-});
-
-// -- public API
-// todo: make singleTrackState
-export const currentTrackState = selector({
-  key: 'currentTrack',
-  get: ({ get, getCallback }) => {
-    const sharedSounds = get(getNodeSounds(SHARED_SOUNDSCAPE_NODE_ID));
-    if (sharedSounds.length > 0) {
-      const track = get(findTrack(sharedSounds[0].trackId));
-      return track;
-    }
-  },
-  set: ({ get, set, reset }, newValue) => {
-    const sharedSounds = get(getNodeSounds(SHARED_SOUNDSCAPE_NODE_ID));
-
-    if (newValue instanceof DefaultValue || !newValue) {
-      if (sharedSounds.length > 0) {
-        // stop currently playing sound
-        set(soundNodeFamily(SHARED_SOUNDSCAPE_NODE_ID), (localNode) =>
-          localNode
-            ? {
-                ...localNode,
-                children: localNode.children.slice(1),
-              }
-            : null
-        );
-        reset(soundNodeFamily(sharedSounds[0].id));
-        reset(soundFamily(sharedSounds[0].id));
-      }
-
-      return;
-    }
-
-    if (sharedSounds.length > 0) {
-      // replace existing sound
-      set(soundFamily(sharedSounds[0].id), {
-        id: sharedSounds[0].id,
-        trackId: newValue.id,
-      });
-    } else {
-      const nodeId = humanId();
-      // play fresh sound
-      set(soundFamily(nodeId), {
-        id: nodeId,
-        trackId: newValue.id,
-      });
-
-      // sound node
-      set(soundNodeFamily(nodeId), {
-        id: nodeId,
-        type: 'sound',
-        children: [],
-      });
-
-      // add sound node to track
-      set(soundNodeFamily(SHARED_SOUNDSCAPE_NODE_ID), (localNode) =>
-        localNode
-          ? {
-              ...localNode,
-              children: localNode.children.concat(nodeId),
-            }
-          : {
-              id: SHARED_SOUNDSCAPE_NODE_ID,
-              type: 'group' as const,
-              children: [nodeId],
-            }
-      );
-    }
-  },
 });

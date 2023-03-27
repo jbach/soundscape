@@ -1,21 +1,27 @@
 import { Badge, Button, Card, Group, Image, Text, Title } from '@mantine/core';
 import { useIntersection } from '@mantine/hooks';
 import { IconMusic } from '@tabler/icons-react';
+import { SHARED_SOUNDSCAPE_NODE_ID } from 'lib/constants';
 import { Track } from 'lib/schemas';
-import { currentTrackState } from 'lib/state';
+import { currentTrackState, localTrackState, volumeFamily } from 'lib/state';
 import { getIconProps } from 'lib/theme';
 import { useCallback } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 type TrackCardProps = {
   track: Track;
 };
 
 const TrackCard = ({ track }: TrackCardProps) => {
+  const setSharedVolume = useSetRecoilState(
+    volumeFamily(SHARED_SOUNDSCAPE_NODE_ID)
+  );
   const [currentTrack, setCurrentTrack] = useRecoilState(currentTrackState);
+  const [localTrack, setLocalTrack] = useRecoilState(localTrackState);
 
   const { ref, entry } = useIntersection({});
   const isPlaying = currentTrack?.id === track.id;
+  const isPreviewing = localTrack?.id === track.id;
   const isVisible = entry?.isIntersecting;
   const togglePlay = useCallback(() => {
     setCurrentTrack((prevTrack) => {
@@ -24,6 +30,15 @@ const TrackCard = ({ track }: TrackCardProps) => {
       }
     });
   }, [setCurrentTrack, track]);
+
+  const togglePreview = useCallback(() => {
+    setLocalTrack((prevTrack) => {
+      // todo: seek to middle
+      if (!prevTrack || prevTrack.id !== track.id) {
+        return track;
+      }
+    });
+  }, [setLocalTrack, track]);
 
   return (
     <Card
@@ -95,11 +110,12 @@ const TrackCard = ({ track }: TrackCardProps) => {
         py='sm'
         mt='auto'
         sx={(theme) => ({
-          backgroundColor: isPlaying
-            ? theme.colorScheme === 'dark'
-              ? theme.fn.rgba(theme.colors.red[theme.fn.primaryShade()], 0.2)
-              : theme.colors.red[0]
-            : 'transparent',
+          backgroundColor:
+            isPlaying || isPreviewing
+              ? theme.colorScheme === 'dark'
+                ? theme.fn.rgba(theme.colors.red[theme.fn.primaryShade()], 0.2)
+                : theme.colors.red[0]
+              : 'transparent',
         })}
       >
         {isPlaying ? (
@@ -107,9 +123,42 @@ const TrackCard = ({ track }: TrackCardProps) => {
             Stop
           </Button>
         ) : (
-          <Button fullWidth onClick={togglePlay}>
-            Play
-          </Button>
+          <Button.Group>
+            <Button
+              fullWidth
+              onClick={() => {
+                setSharedVolume((prev) => ({ ...prev, muted: false }));
+                setLocalTrack(undefined);
+                togglePlay();
+              }}
+            >
+              Play
+            </Button>
+            {isPreviewing ? (
+              <Button
+                onClick={() => {
+                  setSharedVolume((prev) => ({ ...prev, muted: false }));
+                  togglePreview();
+                }}
+                color='red'
+                fullWidth
+              >
+                Stop Preview
+              </Button>
+            ) : (
+              <Button
+                fullWidth
+                variant='light'
+                disabled={isPlaying}
+                onClick={() => {
+                  setSharedVolume((prev) => ({ ...prev, muted: true }));
+                  togglePreview();
+                }}
+              >
+                Preview
+              </Button>
+            )}
+          </Button.Group>
         )}
       </Card.Section>
     </Card>
