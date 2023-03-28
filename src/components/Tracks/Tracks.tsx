@@ -29,6 +29,7 @@ const Tracks = () => {
             cols: 4,
           },
         ]}
+        pb={pages > 1 ? 55 : 0}
       >
         {filteredPageTracks.map((track) => (
           <TrackCard key={track.id} track={track} highlight={search} />
